@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 <?php
 session_start();
 require_once ('authenticate.php');
@@ -26,8 +25,7 @@ if (isset($_POST['username'], $_POST['password'])) {
         echo "Invalid username or password";
     }
 }
-?>
-=======
+
 <?php
 
 session_start();
