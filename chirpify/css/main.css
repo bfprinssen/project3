@@ -1,22 +1,29 @@
-nav {
-  display: flex;
+body{
+    background-color: #89CFF0;
+}
+.navbar{
+    display: flex;
+    align-items:space-between;
+background-color: aqua;
+
+    text-align: center;
+    
+ 
+}
+a{
+    color: black;
+    text-decoration: none;
+        
 }
 
-nav ul {
-  display: flex;
-  gap: 2em;
+.home{
+    margin-left: 10rem;
 }
 
-nav ul li {
-  list-style-type: none;
+.logout{
+    margin-right: 10rem;
 }
-
-nav ul li a {
-  text-decoration: none;
-  color: #0ff144;
-  display: flex;
+.right_twe{
+display: flex;
+  justify-content: flex-end;
 }
-
-
-
-/*# sourceMappingURL=main.css.map */
