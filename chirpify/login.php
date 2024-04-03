@@ -1,59 +1,108 @@
 <?php
 session_start();
-require_once ('authenticate.php');
-require 'conn.php';
+$message='';
 
-if (isset($_POST['username'], $_POST['password'])) {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+// echo session_id();
+// echo session_status();
+// echo '<pre>'.print_r($_POST,true).'</pre>';
 
-    $query = $db->prepare("SELECT * FROM users WHERE username = :username");
-    $query->bindParam(":username", $username);
-    $query->execute();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+     // The request is using the POST method
+         include 'conn.php';
 
-    $user = $query->fetch(PDO::FETCH_ASSOC);
+         if(isset($_POST['username']) && isset($_POST['password'])) {
 
-    if ($user && password_verify($password, $user['password'])) {
-        // The username and password are correct. Start the session and store the user_id
-        $_SESSION['user_id'] = $user['User_id'];
+            //echo '<pre>'.print_r($_POST,true).'</pre>';
+             $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_STRING);
+             $password = $_POST['password'];
+             $query = $db->prepare("SELECT * FROM users WHERE username = :username");
+             $query->bindParam(":username", $username);
+             $query->execute();
+             if ($query->rowCount() == 1) {
+                 $result = $query->fetch(PDO::FETCH_ASSOC);
 
-        // Redirect the user to the homepage or wherever you want
-        header('Location: home.php');
-        exit;
-    } else {
-        // The username or password are incorrect
-        echo "Invalid username or password";
-    }
-}
+               echo '<pre>'.print_r($result,true).'</pre>';
 
-<?php
+                 if (password_verify($password, $result['password'])) {
 
-session_start();
-try {
-    include 'conn.php';
-    $db = new PDO("mysql:host=localhost;dbname=benny_db", "benny_db", "b3nth3m@n");
-    if(isset($_POST['username']) && isset($_POST['password'])) {
-        $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_STRING);
-        $password = $_POST['password'];
-        $query = $db->prepare("SELECT * FROM users WHERE username = :username");
-        $query->bindParam(":username", $username);
-        $query->execute();
-        if ($query->rowCount() == 1) {
-            $result = $query->fetch(PDO::FETCH_ASSOC);
-            if (password_verify($password, $result['password'])) {
-                header("Location: /chirpify/home.php");
-                exit();
-            } else {
-                $_SESSION['error'] = "Incorrect password!";
-                header("Location: index.php");
-                exit();
+
+                      $_SESSION["UID"] = $result['User_id'];
+
+                    echo '<pre>'.print_r($_SESSION,true).'</pre>';
+                       header("Location: index.php");
+                    echo 'OK';
+
+exit();
+                 } else {
+                  echo 'NOT OK';
+                     $message = "Incorrect password!";
+                 }
+             } else {
+                 $message = "Username not found!";
             }
-        } else {
-            $_SESSION['error'] = "Username not found!";
-            header("Location: index.php");
-            exit();
-        }
-    }
-} catch (PDOException $e) {
-    die("Error!: " . $e->getMessage());
+         }
+
+}else{
+// echo "NO_POST";
 }
+?>
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>User Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  </head>
+  <body>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-10 col-md-6 col-lg-4">
+      <div class="card mt-5">
+        <div class="card-header">
+          User Login
+        </div>
+        <form action="login.php" method="POST">
+        <div class="card-body">
+          <?php
+           // echo '<pre>'.print_r($_POST,true).'</pre>';
+          if($message!=''){
+          echo "<p style=\"color:#F00;\">$message</p>";
+          }
+          ?>
+              <label for="username" class="username">Username:</label>
+              <input type="text" class="form-control" id="username" name="username" required autocomplete="off">
+              <label for="password" class="password">Password:</label>
+              <input type="password" class="form-control" id="password" name="password" required autocomplete="off">
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+              <small>Don't have an account?<br>
+                <a href="/register.php">Register here</a></small>
+                <button type="submit" class="btn btn-success">login</button>
+              </div>
+            </form>
+          </div>
+      </div>
+  </div>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+  </body>
+</html>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/BUmain.css">
+    <title>User Login</title>
+    <style>
+    </style>
+</head>
+<body>
+
+</body>
+</html>

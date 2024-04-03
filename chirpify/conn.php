@@ -1,22 +1,12 @@
-<<<<<<< Updated upstream
 <?php
 
-require_once ('authenticate.php');
-
-$db = new PDO("mysql:host=localhost;dbname=y", "root", "");
-
-=======
-<?php
-
-echo 'CONN';
+// echo 'CONN';
 
 if($_SERVER['HTTP_HOST']=='benny.221.projectserver.nl'){
-    echo 'server';
+    // echo 'server';
     $db = new PDO("mysql:host=localhost;dbname=benny_db", "benny_db", "b3nth3m@n");
 }
 else{
-    $db = new PDO("mysql:host=localhost;dbname=y", "root", "");
+    $db = new PDO("mysql:host=localhost;dbname=benny_db", "root", "");
 }
 
-
->>>>>>> Stashed changes

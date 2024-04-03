@@ -1,19 +1,21 @@
 <?php
-session_start(); // Start the session
-require ('authenticate.php');
+if(session_status() === PHP_SESSION_NONE) {session_start();}
+
+
+
 try {
-    require('conn.php');
+   include 'conn.php';
 
     if (isset($_POST)) {
-        $content = $_POST['content'];
-        $user_id = $_SESSION['user_id']; // assuming you have user_id in session
+        $tweet_message =  filter_input(INPUT_POST, "tweet_message", FILTER_SANITIZE_STRING);
+        $tweet_user =  $_SESSION['UID'] ;
 
-        $query = $db->prepare("INSERT INTO tweets(content, user_id) VALUES (:content, :user_id)");
-        $query->bindParam(":content", $content);
-        $query->bindParam(":user_id", $user_id);
+        $query = $db->prepare("INSERT INTO tweets(user_id, tweet_message) VALUES (:tweet_user,:tweet_message)");
+        $query->bindParam(":tweet_message", $tweet_message);
+        $query->bindParam(":tweet_user", $tweet_user);
 
         if($query->execute()) {
-            header('location: /chirpify/tweetviewer.php');
+            header('location: tweetviewer.php');
         } else {
             echo "Er is een fout opgetreden!";
         }
@@ -23,3 +25,4 @@ try {
 } catch (PDOException $e) {
     die("Error!: " . $e->getMessage());
 }
+?>
