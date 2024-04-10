@@ -13,6 +13,7 @@ try{
 } catch (PDOException $e) {
     die("Error!: " . $e->getMessage());
 }
+$sql = "SELECT T.*, U.username AS username, T.tweet_id AS tweet_id FROM tweets T LEFT JOIN users U ON U.User_id= T.user_id";
 ?>
 <!doctype html>
 <html lang="en">
@@ -46,7 +47,10 @@ try{
 foreach($messages as $message){
     
     
-    echo "<li class=\"list-group-item\">".$message['username']." zegt : ".htmlspecialchars($message['tweet_message'])." <br> ".date("F j, Y, g:i a" ,strtotime($message['dateCreated']))." </li>";
+    echo "<li class=\"list-group-item\">".$message['username']." zegt : ".htmlspecialchars($message['tweet_message'])." <br> ".date("F j, Y, g:i a" ,strtotime($message['dateCreated']))."<form action="delete_tweet.php" method="post">
+    <input type="hidden" name="tweet_id" value="<?php echo $message['tweet_id'];?>">
+    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+</form> </li>";
 }
 
 
